@@ -1,0 +1,62 @@
+#!/bin/bash
+
+        TARGET_DIR="/example"
+
+                while [ ! -d "$TARGET_DIR" ]; do
+                        echo "Its seems that your target directory not exist."
+                        read -p "press ENTER to procced..."
+
+                        echo  "--PLEASE WRITE YOUR FILES DIRECTORY PATH--"
+                        echo  "for exemple FILL /home/user/my_directory"
+                        read   TARGET_DIR
+                done
+
+                        echo "THE DIRECTORY EXISTS"
+                        echo "These are the files inside:"
+                        ls -l "$TARGET_DIR"
+
+                read -p "procced sort the files? [Y/any other key for NO]: " answer
+
+                if [[ "$answer" == "Y" ||  "$answer" == "y" ]]; then
+                        echo "OK"
+                else
+                        echo "OK - SEE YOU NEXT TIME"
+                        exit 0
+                fi
+
+                declare -A ext
+
+                for file in "$TARGET_DIR"/*.*; do
+                        if [[ -f "$file" ]]; then
+                                EXTENSION="${file##*.}"
+                                ext["$EXTENSION"]=1
+                        fi
+                done
+                                echo "this is the extensions i found:"
+                                for extension in "${!ext[@]}"; do
+                                        echo "- $extension"
+                                done
+
+                                read -p "procced sort the files and move them to folders? [Y/any other key for NO]: " move_answer
+
+                        if [[ "$move_answer" == "Y" ||  "$move_answer" == "y" ]]; then
+                        echo "OK"
+                        else
+                        echo "OK - SEE YOU NEXT TIME"
+                        exit 0
+                        fi
+
+                        for file in "$TARGET_DIR"/*.*; do
+                            if [[ -f "$file" ]]; then
+                                EXTENSION="${file##*.}"
+
+                                mkdir -p "$TARGET_DIR/$EXTENSION"
+                                mv "$file" "$TARGET_DIR/$EXTENSION/"
+                                echo "$file has been moved to $EXTENSION."
+                        else
+                                echo "OK"
+                                echo "$file will not be moved."
+                                echo "bye bye"
+                                exit 0
+                        fi
+        done
